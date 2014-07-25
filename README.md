@@ -24,3 +24,33 @@ TODO
 - [ ] 配置文件的读取  
 - [ ] 源码安装的配置方式  
 
+
+env
+----------------
+
+初始化
+```
+virtualenv env --python=python2.7
+```
+
+进入环境
+
+```
+source env/bin/activate
+```
+
+退出环境
+```
+deactivate
+```
+
+requirements
+---------------------
+
+```
+pip freeze > requirements.txt
+```
+
+```
+pip install -r requirements.txt
+```
