@@ -2,8 +2,9 @@
 # encoding: utf-8
 
 from subprocess import *
+import re
 
-class GitManager(Object):
+class GitManager(object):
     """
     git管理器,主要实现检查远程分支是否有更新,和执行更新操作
     """
@@ -22,28 +23,31 @@ class GitManager(Object):
         """
         检查更新
         """
-        fetch_cmd = "git fetch origin {0}".format(branch)
-        code = call(fetch_cmd)
-        if not code:
+        fetch_cmd = ["git", "fetch", "origin", branch]
+        f_cmd = Popen(fetch_cmd, stdout=PIPE)
+        if f_cmd.wait():
+            print("Fetch update info error!")
             return False
 
-        status_cmd = "git status"
-        sub = Popen(cmd)
+        status_cmd = ["git", "status", "--porcelain", "-b"]
+        sub = Popen(status_cmd, stdout=PIPE)
         sub.wait()
-        print(sub.stdout.read())
-        return True
+        binfo = sub.stdout.read()
+        reg = re.compile(r".*master$")
+        info = binfo.decode()
+        result = reg.match(info)
+        return True if result else False
 
     def update(self, branch="master"):
         """
         更新分支
         """
         branch_cmd = "git checkout {0}".format(branch)
-        code = call(branch_cmd)
+        code = call(branch_cmd, shell=True)
         if not code :
             return False
 
         cmd = "git pull origin {0}".format(branch)
         sub = Popen(cmd)
-        
         sub.wait()
         return True
