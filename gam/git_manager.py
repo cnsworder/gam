@@ -24,8 +24,8 @@ class GitManager(object):
         检查更新
         """
         fetch_cmd = ["git", "fetch", "origin", branch]
-        f_cmd = Popen(fetch_cmd, stdout=PIPE)
-        if f_cmd.wait():
+        f_sub = Popen(fetch_cmd)
+        if f_sub.wait():
             print("Fetch update info error!")
             return False
 
@@ -42,7 +42,7 @@ class GitManager(object):
         """
         更新分支
         """
-        branch_cmd = "git checkout {0}".format(branch)
+        branch_cmd = ["git", "checkout", branch]
         code = call(branch_cmd, shell=True)
         if not code :
             return False
